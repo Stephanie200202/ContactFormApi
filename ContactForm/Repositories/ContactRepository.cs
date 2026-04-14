@@ -33,8 +33,12 @@ namespace ContactFormApi.Repository
             var contact = await _context.Contacts.FindAsync(id);
             if (contact == null) return false;
 
-            contact.Name = contactDto.Name;
+            contact.FirstName = contactDto.FirstName;
+            contact.LastName = contactDto.LastName;
+            contact.PhoneNumber = contactDto.PhoneNumber;
             contact.Email = contactDto.Email;
+            contact.City = contactDto.City;
+            contact.Address = contactDto.Address;   
 
             _context.Contacts.Update(contact);
             await _context.SaveChangesAsync();
@@ -45,8 +49,12 @@ namespace ContactFormApi.Repository
         {
             var contact = new Contact
             {
-                Name = contactDto.Name,
+                FirstName = contactDto.FirstName,
+                LastName = contactDto.LastName,
+                PhoneNumber = contactDto.PhoneNumber,
                 Email = contactDto.Email,
+                City = contactDto.City,
+                Address = contactDto.Address
             };
 
             await _context.Contacts.AddAsync(contact);
