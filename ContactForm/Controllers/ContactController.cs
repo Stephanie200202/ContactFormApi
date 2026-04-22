@@ -18,6 +18,8 @@ namespace ContactFormApi.Controllers
             _contactRepository = contactRepository;
         }
 
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddContact([FromBody] ContactDto contactDto)
         {
@@ -25,7 +27,7 @@ namespace ContactFormApi.Controllers
             return Ok(new { Message = "Contact form submitted", Id = id });
         }
 
-        [Authorize]
+        [Authorize(Roles = "Student")]
         [HttpGet("{id}")] // READ ONE
         public async Task<IActionResult> GetById(int id)
         {

@@ -1,4 +1,4 @@
-using ContactForm.Models;
+﻿using ContactForm.Models;
 using ContactForm.Repositories.IRepositories;
 using ContactFormApi.Data;
 using ContactFormApi.Repository;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,10 +62,12 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+
+        // 👇 This ensures ASP.NET Core recognizes "role" claims in the JWT
+        RoleClaimType = ClaimTypes.Role
     };
 
-    // The Events block goes HERE, inside the same AddJwtBearer options
     options.Events = new JwtBearerEvents
     {
         OnChallenge = context =>
@@ -83,6 +86,7 @@ builder.Services.AddAuthentication(options =>
         }
     };
 });
+
 // Register Repository and Controllers
 builder.Services.AddControllers();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
