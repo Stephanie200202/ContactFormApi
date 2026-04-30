@@ -1,5 +1,7 @@
 ﻿using ContactForm.Models;
 using ContactForm.Repositories.IRepositories;
+using ContactForm.Services;
+using ContactForm.Services.IServices;
 using ContactFormApi.Data;
 using ContactFormApi.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,6 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Database Connection
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default Connection")));
+
+
 
 // Identity Setup
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -90,6 +94,8 @@ builder.Services.AddAuthentication(options =>
 // Register Repository and Controllers
 builder.Services.AddControllers();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
+builder.Services.AddScoped<ICountryService, CountryService>();
+builder.Services.AddHttpClient();
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
